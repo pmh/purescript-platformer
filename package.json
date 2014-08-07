@@ -1,0 +1,19 @@
+{
+  "name": "purescript-platformer",
+  "version": "0.1.0",
+  "description": "A purely functional 2D Platformer game written in PureScript and Phaser",
+  "main": "",
+  "private": true,
+  "author": "Patrik Hedman",
+  "license": "MIT",
+  "dependencies": {
+    "grunt": "~0.4.4",
+    "grunt-browserify": "^2.1.4",
+    "grunt-contrib-clean": "~0.5.0",
+    "grunt-contrib-connect": "^0.8.0",
+    "grunt-contrib-copy": "~0.5.0",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-execute": "~0.1.5",
+    "grunt-purescript": "~0.5.0"
+  }
+}

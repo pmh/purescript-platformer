@@ -1,0 +1,29 @@
+{
+  "name": "purescript-platformer",
+  "description": "A purely functional 2D Platformer game written in PureScript and Phaser",
+  "keywords": [
+    "purescript"
+  ],
+  "ignore": [
+    "**/.*",
+    "bower_components",
+    "node_modules",
+    "output",
+    "tests",
+    "js",
+    "tmp",
+    "bower.json",
+    "Gruntfile.js",
+    "package.json"
+  ],
+  "dependencies": {
+    "purescript-arrays": "*",
+    "purescript-maybe": "*",
+    "purescript-foldable-traversable": "*",
+    "phaser": "~2.0.7"
+  },
+  "devDependencies": {
+    "purescript-math": "*",
+    "purescript-quickcheck": "*"
+  }
+}
