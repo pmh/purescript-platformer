@@ -1,7 +1,7 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 require("Main").main();
 
-},{"Main":5}],2:[function(require,module,exports){
+},{"Main":4}],2:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
 function returnE(a) {  return function() {    return a;  };};
@@ -50,7 +50,7 @@ module.exports = {
     bindEff: bindEff, 
     monadEff: monadEff
 };
-},{"Prelude":8}],3:[function(require,module,exports){
+},{"Prelude":7}],3:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
 function unsafeForeignProcedure(args) {  return function (stmt) {    return Function(wrap(args.slice()))();    function wrap() {      return !args.length ? stmt : 'return function (' + args.shift() + ') { ' + wrap() + ' };';    }  };};
@@ -63,25 +63,11 @@ module.exports = {
     unsafeForeignProcedure: unsafeForeignProcedure, 
     unsafeForeignFunction: unsafeForeignFunction
 };
-},{"Prelude":8}],4:[function(require,module,exports){
-"use strict";
-var Prelude = require("Prelude");
-function trace(s) {  return function() {    console.log(s);    return {};  };};
-var print = function (__dict_Show_0) {
-    return function (o) {
-        return trace(Prelude.show(__dict_Show_0)(o));
-    };
-};
-module.exports = {
-    print: print, 
-    trace: trace
-};
-},{"Prelude":8}],5:[function(require,module,exports){
+},{"Prelude":7}],4:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
 var Control_Monad_Eff = require("Control.Monad.Eff");
 var Phaser_Sprite = require("Phaser.Sprite");
-var Debug_Trace = require("Debug.Trace");
 var Phaser_Core = require("Phaser.Core");
 var star = "star";
 var sky = "sky";
@@ -94,11 +80,15 @@ var preload = function (game) {
     return function __do() {
         Phaser_Sprite.loadImage(game)(sky)(path(sky))();
         var __1 = Phaser_Sprite.loadImage(game)(ground)(path(ground))();
-        return Phaser_Sprite.loadImage(game)(star)(path(star))();
+        var __2 = Phaser_Sprite.loadImage(game)(star)(path(star))();
+        return Phaser_Sprite.loadSprite(game)(player)(path(player))(32)(48)();
     };
 };
 var create = function (game) {
-    return Debug_Trace.trace("create called ...");
+    return Phaser_Sprite.addSprite(game)(star)({
+        x: 0, 
+        y: 0
+    });
 };
 var main = Phaser_Core.phaser(Phaser_Core.config)({
     preload: preload, 
@@ -114,7 +104,7 @@ module.exports = {
     sky: sky, 
     path: path
 };
-},{"Control.Monad.Eff":2,"Debug.Trace":4,"Phaser.Core":6,"Phaser.Sprite":7,"Prelude":8}],6:[function(require,module,exports){
+},{"Control.Monad.Eff":2,"Phaser.Core":5,"Phaser.Sprite":6,"Prelude":7}],5:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
 var Control_Monad_Eff = require("Control.Monad.Eff");
@@ -155,17 +145,19 @@ module.exports = {
     actions: actions, 
     config: config
 };
-},{"Control.Monad.Eff":2,"Prelude":8}],7:[function(require,module,exports){
+},{"Control.Monad.Eff":2,"Prelude":7}],6:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
 var Data_Foreign_EasyFFI = require("Data.Foreign.EasyFFI");
+var loadSprite = Data_Foreign_EasyFFI.unsafeForeignFunction([ "game", "name", "path", "frameWidth", "frameHeight", "" ])("game.load.spritesheet(name, path, frameWidth, frameHeight)");
 var loadImage = Data_Foreign_EasyFFI.unsafeForeignFunction([ "game", "name", "path", "" ])("game.load.image(name, path)");
 var addSprite = Data_Foreign_EasyFFI.unsafeForeignFunction([ "game", "name", "point", "" ])("game.add.sprite(point.x, point.y, name)");
 module.exports = {
     addSprite: addSprite, 
+    loadSprite: loadSprite, 
     loadImage: loadImage
 };
-},{"Data.Foreign.EasyFFI":3,"Prelude":8}],8:[function(require,module,exports){
+},{"Data.Foreign.EasyFFI":3,"Prelude":7}],7:[function(require,module,exports){
 "use strict";
 var Unit = {
     create: function (value) {
