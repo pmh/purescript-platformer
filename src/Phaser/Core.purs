@@ -42,4 +42,4 @@ foreign import phaser
   \      return game; \
   \    } \
   \  } \
-  \}" :: forall conf props dom eff. Config -> Actions -> Eff (game :: Game | eff) Phaser
+  \}" :: forall props eff. Config -> {| props} -> Eff (game :: Game | eff) Phaser

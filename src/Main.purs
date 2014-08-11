@@ -1,16 +1,26 @@
 module Main where
 
 import Control.Monad.Eff
+import Debug.Trace
 import Phaser.Core
 import Phaser.Sprite
 
-babyZombie     = "baby-zombie"
-babyZombiePath = "img/" ++ babyZombie ++ ".png"
+path :: String -> String
+path asset = "img/" ++ asset ++ ".png"
 
-preload :: forall eff. Phaser -> Eff (game :: Game | eff) Unit
-preload game = loadImage game babyZombie babyZombiePath
+sky    = "sky"
+ground = "platform"
+star   = "star"
+player = "player"
 
-create :: forall eff. Phaser -> Eff (game :: Game | eff) Unit
-create game  = addSprite game babyZombie { x: 0, y: 0 }
 
-main = phaser config actions { preload = preload, create = create }
+preload :: forall eff. Phaser -> Eff (game :: Game, trace :: Trace | eff) Unit
+preload game = do
+  loadImage game sky    $ path sky
+  loadImage game ground $ path ground
+  loadImage game star   $ path star
+
+create :: forall eff. Phaser -> Eff (game :: Game, trace :: Trace | eff) Unit
+create game  = trace "create called ..."
+
+main = phaser config { preload : preload, create : create }
