@@ -123,10 +123,10 @@ var config = {
     height: innerHeight
 };
 var actions = {
-    preload: function (x) {
+    preload: function (_) {
         return Prelude["return"](Control_Monad_Eff.monadEff({}))(Prelude.unit);
     }, 
-    create: function (x) {
+    create: function (_) {
         return Prelude["return"](Control_Monad_Eff.monadEff({}))(Prelude.unit);
     }
 };

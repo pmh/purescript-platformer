@@ -28,7 +28,7 @@ config :: Config
 config = { id : "body", renderer : Auto, width : innerWidth, height : innerHeight }
 
 actions :: Actions
-actions = { preload : (\x -> return unit), create : (\x -> return unit) }
+actions = { preload : (\_ -> return unit), create : (\_ -> return unit) }
 
 foreign import phaser
   "function phaser (conf) { \

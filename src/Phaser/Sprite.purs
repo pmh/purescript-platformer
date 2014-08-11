@@ -4,8 +4,6 @@ import Control.Monad.Eff
 import Data.Foreign.EasyFFI
 import Phaser.Core
 
-foreign import data Preload :: !
-
 type Point = { x :: Number, y :: Number }
 
 type AssetName = String
