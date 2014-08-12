@@ -4,8 +4,6 @@ import Control.Monad.Eff
 import Control.Monad.Eff.Phaser
 import Data.Foreign.EasyFFI
 
-type Point = { x :: Number, y :: Number }
-
 type AssetName   = String
 type AssetPath   = String
 

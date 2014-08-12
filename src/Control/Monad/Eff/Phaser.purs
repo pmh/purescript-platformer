@@ -1,6 +1,7 @@
 module Control.Monad.Eff.Phaser
   ( Game     ()
   , Phaser   ()
+  , Point    ()
   , Config   ()
   , Renderer (..)
   , config
@@ -16,9 +17,11 @@ foreign import data Game   :: *
 foreign import innerWidth  "window.innerWidth"  :: Number
 foreign import innerHeight "window.innerHeight" :: Number
 
-type Config  = { id :: String, renderer :: Renderer, width :: Number, height :: Number }
-
 data Renderer = Auto | Canvas | WebGL
+
+type Point  = { x :: Number, y :: Number }
+type Config = { id :: String, renderer :: Renderer, width :: Number, height :: Number }
+
 
 config :: Config
 config = { id : "body", renderer : Auto, width : innerWidth, height : innerHeight }

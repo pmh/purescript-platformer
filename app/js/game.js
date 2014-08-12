@@ -147,12 +147,16 @@ var startSystem = function (_0) {
         throw new Error("Failed pattern match");
     };
 };
+var enableBody = Data_Foreign_EasyFFI.unsafeForeignProcedure([ "group", "" ])("group.enableBody = true; return group;");
+var disableBody = Data_Foreign_EasyFFI.unsafeForeignProcedure([ "group", "" ])("group.enableBody = false; return group;");
 module.exports = {
     Arcade: Arcade, 
     Chipmunk: Chipmunk, 
     Ninja: Ninja, 
     P2JS: P2JS, 
     Box2D: Box2D, 
+    disableBody: disableBody, 
+    enableBody: enableBody, 
     startSystem: startSystem
 };
 },{"Data.Foreign.EasyFFI":4,"Prelude":9}],7:[function(require,module,exports){
@@ -197,20 +201,20 @@ var create = function (game) {
             x: 0, 
             y: 0
         })();
-        var _0 = Data_Phaser_Group.group(game)();
+        var __2 = Prelude[">>="](Control_Monad_Eff.bindEff({}))(Data_Phaser_Group.group(game))(Data_Phaser_Physics.enableBody)();
         return Prelude.unit;
     };
 };
 var main = Control_Monad_Eff_Phaser.phaser((function () {
-    var _2 = {};
-    for (var _3 in Control_Monad_Eff_Phaser.config) {
-        if (Control_Monad_Eff_Phaser.config.hasOwnProperty(_3)) {
-            _2[_3] = Control_Monad_Eff_Phaser.config[_3];
+    var _4 = {};
+    for (var _5 in Control_Monad_Eff_Phaser.config) {
+        if (Control_Monad_Eff_Phaser.config.hasOwnProperty(_5)) {
+            _4[_5] = Control_Monad_Eff_Phaser.config[_5];
         };
     };
-    _2.width = 800;
-    _2.height = 600;
-    return _2;
+    _4.width = 800;
+    _4.height = 600;
+    return _4;
 })())({
     preload: preload, 
     create: create
