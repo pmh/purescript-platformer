@@ -133,7 +133,17 @@ var create = function (game) {
         y: 0
     });
 };
-var main = Control_Monad_Eff_Phaser.phaser(Control_Monad_Eff_Phaser.config)({
+var main = Control_Monad_Eff_Phaser.phaser((function () {
+    var _0 = {};
+    for (var _1 in Control_Monad_Eff_Phaser.config) {
+        if (Control_Monad_Eff_Phaser.config.hasOwnProperty(_1)) {
+            _0[_1] = Control_Monad_Eff_Phaser.config[_1];
+        };
+    };
+    _0.width = 800;
+    _0.height = 600;
+    return _0;
+})())({
     preload: preload, 
     create: create
 });

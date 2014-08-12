@@ -24,4 +24,5 @@ preload game = do
 create :: forall eff. Game -> Eff (phaser :: Phaser, trace :: Trace | eff) Unit
 create game = addSprite game star { x : 0, y : 0 }
 
-main = phaser config { preload : preload, create : create }
+main = phaser config { width = 800, height = 600 }
+              { preload : preload, create : create }
