@@ -2,7 +2,7 @@ module Main where
 
 import           Control.Monad.Eff
 import           Control.Monad.Eff.Phaser
-import qualified Data.Phaser.Group   as G
+import           Data.Phaser.Group
 import qualified Data.Phaser.Physics as P
 import           Data.Phaser.Sprite
 import           Debug.Trace
@@ -15,27 +15,31 @@ ground = "platform"
 star   = "star"
 player = "player"
 
+load :: AssetName -> (forall eff. Game -> Eff (phaser :: Phaser | eff) Game)
+load asset | asset == player = loadSprite asset (path asset) 32 48
+load asset                   = loadImage  asset $ path asset
 
-preload :: forall eff. Game -> Eff (phaser :: Phaser, trace :: Trace | eff) Unit
-preload game = do
-  loadImage  game sky    $ path sky
-  loadImage  game ground $ path ground
-  loadImage  game star   $ path star
-  loadSprite game player (path player) 32 48
+preload' :: forall eff. Game -> Eff (phaser :: Phaser, trace :: Trace | eff) Game
+preload' game = 
+  return game >>= load sky
+              >>= load ground
+              >>= load star
+              >>= load player
 
-create :: forall eff. Game -> Eff (phaser :: Phaser, trace :: Trace | eff) G.Group
-create game = do
+create' :: forall eff. Game -> Eff (phaser :: Phaser, trace :: Trace | eff) Group
+create' game = do
   P.startSystem game P.Arcade
-  renderSky    game
-  renderGround game
+  renderSky     game
+  renderGround  game
 
-renderSky :: forall eff. Game -> Eff (phaser :: Phaser | eff) Unit
+renderSky :: forall eff. Game -> Eff (phaser :: Phaser | eff) Game
 renderSky = addSprite sky { x: 0, y: 0 }
 
-renderGround :: forall eff. Game -> Eff (phaser :: Phaser | eff) G.Group
+renderGround :: forall eff. Game -> Eff (phaser :: Phaser | eff) Group
 renderGround game =
-  G.group game >>= P.enableBody
-               >>= G.create ground { x: 0, y: 10 }
+  return game >>= group
+              >>= P.enableBody
+              >>= create ground { x: 0, y: 10 }
 
 main = phaser config { width = 800, height = 600 }
-              { preload : preload, create : create }
+              { preload : preload', create : create' }

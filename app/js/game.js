@@ -165,9 +165,9 @@ module.exports = {
 "use strict";
 var Prelude = require("Prelude");
 var Data_Foreign_EasyFFI = require("Data.Foreign.EasyFFI");
-var loadSprite = Data_Foreign_EasyFFI.unsafeForeignFunction([ "game", "name", "path", "frameWidth", "frameHeight", "" ])("game.load.spritesheet(name, path, frameWidth, frameHeight)");
-var loadImage = Data_Foreign_EasyFFI.unsafeForeignFunction([ "game", "name", "path", "" ])("game.load.image(name, path)");
-var addSprite = Data_Foreign_EasyFFI.unsafeForeignFunction([ "name", "point", "game", "" ])("game.add.sprite(point.x, point.y, name)");
+var loadSprite = Data_Foreign_EasyFFI.unsafeForeignProcedure([ "name", "path", "frameWidth", "frameHeight", "game", "" ])("game.load.spritesheet(name, path, frameWidth, frameHeight); return game;");
+var loadImage = Data_Foreign_EasyFFI.unsafeForeignProcedure([ "name", "path", "game", "" ])("game.load.image(name, path); return game");
+var addSprite = Data_Foreign_EasyFFI.unsafeForeignProcedure([ "name", "point", "game", "" ])("game.add.sprite(point.x, point.y, name); return game;");
 module.exports = {
     addSprite: addSprite, 
     loadSprite: loadSprite, 
@@ -191,22 +191,23 @@ var player = "player";
 var path = function (asset) {
     return "img/" + asset + ".png";
 };
-var ground = "platform";
-var preload = function (game) {
-    return function __do() {
-        Data_Phaser_Sprite.loadImage(game)(sky)(path(sky))();
-        var __1 = Data_Phaser_Sprite.loadImage(game)(ground)(path(ground))();
-        var __2 = Data_Phaser_Sprite.loadImage(game)(star)(path(star))();
-        return Data_Phaser_Sprite.loadSprite(game)(player)(path(player))(32)(48)();
+var load = function (_0) {
+    if (_0 === player) {
+        return Data_Phaser_Sprite.loadSprite(_0)(path(_0))(32)(48);
     };
+    return Data_Phaser_Sprite.loadImage(_0)(path(_0));
+};
+var ground = "platform";
+var preload$prime = function (game) {
+    return Prelude[">>="](Control_Monad_Eff.bindEff({}))(Prelude[">>="](Control_Monad_Eff.bindEff({}))(Prelude[">>="](Control_Monad_Eff.bindEff({}))(Prelude[">>="](Control_Monad_Eff.bindEff({}))(Prelude["return"](Control_Monad_Eff.monadEff({}))(game))(load(sky)))(load(ground)))(load(star)))(load(player));
 };
 var renderGround = function (game) {
-    return Prelude[">>="](Control_Monad_Eff.bindEff({}))(Prelude[">>="](Control_Monad_Eff.bindEff({}))(Data_Phaser_Group.group(game))(Data_Phaser_Physics.enableBody))(Data_Phaser_Group.create(ground)({
+    return Prelude[">>="](Control_Monad_Eff.bindEff({}))(Prelude[">>="](Control_Monad_Eff.bindEff({}))(Prelude[">>="](Control_Monad_Eff.bindEff({}))(Prelude["return"](Control_Monad_Eff.monadEff({}))(game))(Data_Phaser_Group.group))(Data_Phaser_Physics.enableBody))(Data_Phaser_Group.create(ground)({
         x: 0, 
         y: 10
     }));
 };
-var create = function (game) {
+var create$prime = function (game) {
     return function __do() {
         Data_Phaser_Physics.startSystem(game)(Data_Phaser_Physics.Arcade.value)();
         var __1 = renderSky(game)();
@@ -214,25 +215,26 @@ var create = function (game) {
     };
 };
 var main = Control_Monad_Eff_Phaser.phaser((function () {
-    var _0 = {};
-    for (var _1 in Control_Monad_Eff_Phaser.config) {
-        if (Control_Monad_Eff_Phaser.config.hasOwnProperty(_1)) {
-            _0[_1] = Control_Monad_Eff_Phaser.config[_1];
+    var _2 = {};
+    for (var _3 in Control_Monad_Eff_Phaser.config) {
+        if (Control_Monad_Eff_Phaser.config.hasOwnProperty(_3)) {
+            _2[_3] = Control_Monad_Eff_Phaser.config[_3];
         };
     };
-    _0.width = 800;
-    _0.height = 600;
-    return _0;
+    _2.width = 800;
+    _2.height = 600;
+    return _2;
 })())({
-    preload: preload, 
-    create: create
+    preload: preload$prime, 
+    create: create$prime
 });
 module.exports = {
     main: main, 
     renderGround: renderGround, 
     renderSky: renderSky, 
-    create: create, 
-    preload: preload, 
+    "create'": create$prime, 
+    "preload'": preload$prime, 
+    load: load, 
     player: player, 
     star: star, 
     ground: ground, 

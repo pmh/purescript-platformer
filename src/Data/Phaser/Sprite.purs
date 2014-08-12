@@ -10,11 +10,11 @@ type AssetPath   = String
 type FrameWidth  = Number
 type FrameHeight = Number
 
-loadImage :: forall eff. Game -> AssetName -> AssetPath -> Eff (phaser :: Phaser | eff) Unit
-loadImage = unsafeForeignFunction ["game", "name", "path", ""] "game.load.image(name, path)"
+loadImage :: forall eff. AssetName -> AssetPath -> Game -> Eff (phaser :: Phaser | eff) Game
+loadImage = unsafeForeignProcedure ["name", "path", "game", ""] "game.load.image(name, path); return game"
 
-loadSprite :: forall eff. Game -> AssetName -> AssetPath -> FrameWidth -> FrameHeight -> Eff (phaser :: Phaser | eff) Unit
-loadSprite = unsafeForeignFunction ["game", "name", "path", "frameWidth", "frameHeight", ""] "game.load.spritesheet(name, path, frameWidth, frameHeight)"
+loadSprite :: forall eff. AssetName -> AssetPath -> FrameWidth -> FrameHeight -> Game -> Eff (phaser :: Phaser | eff) Game
+loadSprite = unsafeForeignProcedure ["name", "path", "frameWidth", "frameHeight", "game", ""] "game.load.spritesheet(name, path, frameWidth, frameHeight); return game;"
 
-addSprite :: forall eff. AssetName -> Point -> Game -> Eff (phaser :: Phaser | eff) Unit
-addSprite = unsafeForeignFunction ["name", "point", "game", ""] "game.add.sprite(point.x, point.y, name)"
+addSprite :: forall eff. AssetName -> Point -> Game -> Eff (phaser :: Phaser | eff) Game
+addSprite = unsafeForeignProcedure ["name", "point", "game", ""] "game.add.sprite(point.x, point.y, name); return game;"
