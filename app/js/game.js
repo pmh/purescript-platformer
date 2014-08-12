@@ -1,7 +1,7 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 require("Main").main();
 
-},{"Main":7}],2:[function(require,module,exports){
+},{"Main":8}],2:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
 function Auto() {
@@ -32,7 +32,7 @@ module.exports = {
     phaser: phaser, 
     config: config
 };
-},{"Prelude":8}],3:[function(require,module,exports){
+},{"Prelude":9}],3:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
 function returnE(a) {  return function() {    return a;  };};
@@ -81,7 +81,7 @@ module.exports = {
     bindEff: bindEff, 
     monadEff: monadEff
 };
-},{"Prelude":8}],4:[function(require,module,exports){
+},{"Prelude":9}],4:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
 function unsafeForeignProcedure(args) {  return function (stmt) {    return Function(wrap(args.slice()))();    function wrap() {      return !args.length ? stmt : 'return function (' + args.shift() + ') { ' + wrap() + ' };';    }  };};
@@ -94,7 +94,15 @@ module.exports = {
     unsafeForeignProcedure: unsafeForeignProcedure, 
     unsafeForeignFunction: unsafeForeignFunction
 };
-},{"Prelude":8}],5:[function(require,module,exports){
+},{"Prelude":9}],5:[function(require,module,exports){
+"use strict";
+var Prelude = require("Prelude");
+var Data_Foreign_EasyFFI = require("Data.Foreign.EasyFFI");
+var group = Data_Foreign_EasyFFI.unsafeForeignFunction([ "game", "" ])("game.add.group();");
+module.exports = {
+    group: group
+};
+},{"Data.Foreign.EasyFFI":4,"Prelude":9}],6:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
 var Data_Foreign_EasyFFI = require("Data.Foreign.EasyFFI");
@@ -147,7 +155,7 @@ module.exports = {
     Box2D: Box2D, 
     startSystem: startSystem
 };
-},{"Data.Foreign.EasyFFI":4,"Prelude":8}],6:[function(require,module,exports){
+},{"Data.Foreign.EasyFFI":4,"Prelude":9}],7:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
 var Data_Foreign_EasyFFI = require("Data.Foreign.EasyFFI");
@@ -159,12 +167,13 @@ module.exports = {
     loadSprite: loadSprite, 
     loadImage: loadImage
 };
-},{"Data.Foreign.EasyFFI":4,"Prelude":8}],7:[function(require,module,exports){
+},{"Data.Foreign.EasyFFI":4,"Prelude":9}],8:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
 var Control_Monad_Eff = require("Control.Monad.Eff");
 var Data_Phaser_Sprite = require("Data.Phaser.Sprite");
 var Data_Phaser_Physics = require("Data.Phaser.Physics");
+var Data_Phaser_Group = require("Data.Phaser.Group");
 var Control_Monad_Eff_Phaser = require("Control.Monad.Eff.Phaser");
 var star = "star";
 var sky = "sky";
@@ -184,22 +193,24 @@ var preload = function (game) {
 var create = function (game) {
     return function __do() {
         Data_Phaser_Physics.startSystem(game)(Data_Phaser_Physics.Arcade.value)();
-        return Data_Phaser_Sprite.addSprite(game)(sky)({
+        var __1 = Data_Phaser_Sprite.addSprite(game)(sky)({
             x: 0, 
             y: 0
         })();
+        var _0 = Data_Phaser_Group.group(game)();
+        return Prelude.unit;
     };
 };
 var main = Control_Monad_Eff_Phaser.phaser((function () {
-    var _0 = {};
-    for (var _1 in Control_Monad_Eff_Phaser.config) {
-        if (Control_Monad_Eff_Phaser.config.hasOwnProperty(_1)) {
-            _0[_1] = Control_Monad_Eff_Phaser.config[_1];
+    var _2 = {};
+    for (var _3 in Control_Monad_Eff_Phaser.config) {
+        if (Control_Monad_Eff_Phaser.config.hasOwnProperty(_3)) {
+            _2[_3] = Control_Monad_Eff_Phaser.config[_3];
         };
     };
-    _0.width = 800;
-    _0.height = 600;
-    return _0;
+    _2.width = 800;
+    _2.height = 600;
+    return _2;
 })())({
     preload: preload, 
     create: create
@@ -214,7 +225,7 @@ module.exports = {
     sky: sky, 
     path: path
 };
-},{"Control.Monad.Eff":3,"Control.Monad.Eff.Phaser":2,"Data.Phaser.Physics":5,"Data.Phaser.Sprite":6,"Prelude":8}],8:[function(require,module,exports){
+},{"Control.Monad.Eff":3,"Control.Monad.Eff.Phaser":2,"Data.Phaser.Group":5,"Data.Phaser.Physics":6,"Data.Phaser.Sprite":7,"Prelude":9}],9:[function(require,module,exports){
 "use strict";
 var Unit = {
     create: function (value) {

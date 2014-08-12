@@ -2,6 +2,7 @@ module Main where
 
 import           Control.Monad.Eff
 import           Control.Monad.Eff.Phaser
+import           Data.Phaser.Group
 import qualified Data.Phaser.Physics as P
 import           Data.Phaser.Sprite
 import           Debug.Trace
@@ -26,6 +27,8 @@ create :: forall eff. Game -> Eff (phaser :: Phaser, trace :: Trace | eff) Unit
 create game = do
   P.startSystem game P.Arcade
   addSprite game sky { x: 0, y: 0 }
+  platform <- group game
+  return unit
 
 main = phaser config { width = 800, height = 600 }
               { preload : preload, create : create }
