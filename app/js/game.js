@@ -182,7 +182,13 @@ var preload = function (game) {
     };
 };
 var create = function (game) {
-    return Data_Phaser_Physics.startSystem(game)(Data_Phaser_Physics.Arcade.value);
+    return function __do() {
+        Data_Phaser_Physics.startSystem(game)(Data_Phaser_Physics.Arcade.value)();
+        return Data_Phaser_Sprite.addSprite(game)(sky)({
+            x: 0, 
+            y: 0
+        })();
+    };
 };
 var main = Control_Monad_Eff_Phaser.phaser((function () {
     var _0 = {};

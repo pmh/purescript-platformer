@@ -25,6 +25,7 @@ preload game = do
 create :: forall eff. Game -> Eff (phaser :: Phaser, trace :: Trace | eff) Unit
 create game = do
   P.startSystem game P.Arcade
+  addSprite game sky { x: 0, y: 0 }
 
 main = phaser config { width = 800, height = 600 }
               { preload : preload, create : create }
