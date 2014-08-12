@@ -1,7 +1,7 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 require("Main").main();
 
-},{"Main":6}],2:[function(require,module,exports){
+},{"Main":7}],2:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
 function Auto() {
@@ -32,7 +32,7 @@ module.exports = {
     phaser: phaser, 
     config: config
 };
-},{"Prelude":7}],3:[function(require,module,exports){
+},{"Prelude":8}],3:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
 function returnE(a) {  return function() {    return a;  };};
@@ -81,7 +81,7 @@ module.exports = {
     bindEff: bindEff, 
     monadEff: monadEff
 };
-},{"Prelude":7}],4:[function(require,module,exports){
+},{"Prelude":8}],4:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
 function unsafeForeignProcedure(args) {  return function (stmt) {    return Function(wrap(args.slice()))();    function wrap() {      return !args.length ? stmt : 'return function (' + args.shift() + ') { ' + wrap() + ' };';    }  };};
@@ -94,7 +94,60 @@ module.exports = {
     unsafeForeignProcedure: unsafeForeignProcedure, 
     unsafeForeignFunction: unsafeForeignFunction
 };
-},{"Prelude":7}],5:[function(require,module,exports){
+},{"Prelude":8}],5:[function(require,module,exports){
+"use strict";
+var Prelude = require("Prelude");
+var Data_Foreign_EasyFFI = require("Data.Foreign.EasyFFI");
+function Arcade() {
+
+};
+Arcade.value = new Arcade();
+function Chipmunk() {
+
+};
+Chipmunk.value = new Chipmunk();
+function Ninja() {
+
+};
+Ninja.value = new Ninja();
+function P2JS() {
+
+};
+P2JS.value = new P2JS();
+function Box2D() {
+
+};
+Box2D.value = new Box2D();
+var startSystem$prime = Data_Foreign_EasyFFI.unsafeForeignFunction([ "game", "type", "" ])("game.physics.startSystem(type);");
+var startSystem = function (_0) {
+    return function (_1) {
+        if (_1 instanceof Arcade) {
+            return startSystem$prime(_0)(0);
+        };
+        if (_1 instanceof P2JS) {
+            return startSystem$prime(_0)(1);
+        };
+        if (_1 instanceof Ninja) {
+            return startSystem$prime(_0)(2);
+        };
+        if (_1 instanceof Box2D) {
+            return startSystem$prime(_0)(3);
+        };
+        if (_1 instanceof Chipmunk) {
+            return startSystem$prime(_0)(5);
+        };
+        throw new Error("Failed pattern match");
+    };
+};
+module.exports = {
+    Arcade: Arcade, 
+    Chipmunk: Chipmunk, 
+    Ninja: Ninja, 
+    P2JS: P2JS, 
+    Box2D: Box2D, 
+    startSystem: startSystem
+};
+},{"Data.Foreign.EasyFFI":4,"Prelude":8}],6:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
 var Data_Foreign_EasyFFI = require("Data.Foreign.EasyFFI");
@@ -106,11 +159,12 @@ module.exports = {
     loadSprite: loadSprite, 
     loadImage: loadImage
 };
-},{"Data.Foreign.EasyFFI":4,"Prelude":7}],6:[function(require,module,exports){
+},{"Data.Foreign.EasyFFI":4,"Prelude":8}],7:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
 var Control_Monad_Eff = require("Control.Monad.Eff");
 var Data_Phaser_Sprite = require("Data.Phaser.Sprite");
+var Data_Phaser_Physics = require("Data.Phaser.Physics");
 var Control_Monad_Eff_Phaser = require("Control.Monad.Eff.Phaser");
 var star = "star";
 var sky = "sky";
@@ -128,10 +182,7 @@ var preload = function (game) {
     };
 };
 var create = function (game) {
-    return Data_Phaser_Sprite.addSprite(game)(star)({
-        x: 0, 
-        y: 0
-    });
+    return Data_Phaser_Physics.startSystem(game)(Data_Phaser_Physics.Arcade.value);
 };
 var main = Control_Monad_Eff_Phaser.phaser((function () {
     var _0 = {};
@@ -157,7 +208,7 @@ module.exports = {
     sky: sky, 
     path: path
 };
-},{"Control.Monad.Eff":3,"Control.Monad.Eff.Phaser":2,"Data.Phaser.Sprite":5,"Prelude":7}],7:[function(require,module,exports){
+},{"Control.Monad.Eff":3,"Control.Monad.Eff.Phaser":2,"Data.Phaser.Physics":5,"Data.Phaser.Sprite":6,"Prelude":8}],8:[function(require,module,exports){
 "use strict";
 var Unit = {
     create: function (value) {
