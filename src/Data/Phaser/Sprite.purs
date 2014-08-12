@@ -16,5 +16,5 @@ loadImage = unsafeForeignFunction ["game", "name", "path", ""] "game.load.image(
 loadSprite :: forall eff. Game -> AssetName -> AssetPath -> FrameWidth -> FrameHeight -> Eff (phaser :: Phaser | eff) Unit
 loadSprite = unsafeForeignFunction ["game", "name", "path", "frameWidth", "frameHeight", ""] "game.load.spritesheet(name, path, frameWidth, frameHeight)"
 
-addSprite :: forall eff. Game -> AssetName -> Point -> Eff (phaser :: Phaser | eff) Unit
-addSprite = unsafeForeignFunction ["game", "name", "point", ""] "game.add.sprite(point.x, point.y, name)"
+addSprite :: forall eff. AssetName -> Point -> Game -> Eff (phaser :: Phaser | eff) Unit
+addSprite = unsafeForeignFunction ["name", "point", "game", ""] "game.add.sprite(point.x, point.y, name)"

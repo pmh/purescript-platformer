@@ -99,7 +99,9 @@ module.exports = {
 var Prelude = require("Prelude");
 var Data_Foreign_EasyFFI = require("Data.Foreign.EasyFFI");
 var group = Data_Foreign_EasyFFI.unsafeForeignFunction([ "game", "" ])("game.add.group();");
+var create = Data_Foreign_EasyFFI.unsafeForeignFunction([ "name", "point", "group", "" ])("group.create(point.x, point.y, name);");
 module.exports = {
+    create: create, 
     group: group
 };
 },{"Data.Foreign.EasyFFI":4,"Prelude":9}],6:[function(require,module,exports){
@@ -165,7 +167,7 @@ var Prelude = require("Prelude");
 var Data_Foreign_EasyFFI = require("Data.Foreign.EasyFFI");
 var loadSprite = Data_Foreign_EasyFFI.unsafeForeignFunction([ "game", "name", "path", "frameWidth", "frameHeight", "" ])("game.load.spritesheet(name, path, frameWidth, frameHeight)");
 var loadImage = Data_Foreign_EasyFFI.unsafeForeignFunction([ "game", "name", "path", "" ])("game.load.image(name, path)");
-var addSprite = Data_Foreign_EasyFFI.unsafeForeignFunction([ "game", "name", "point", "" ])("game.add.sprite(point.x, point.y, name)");
+var addSprite = Data_Foreign_EasyFFI.unsafeForeignFunction([ "name", "point", "game", "" ])("game.add.sprite(point.x, point.y, name)");
 module.exports = {
     addSprite: addSprite, 
     loadSprite: loadSprite, 
@@ -174,13 +176,17 @@ module.exports = {
 },{"Data.Foreign.EasyFFI":4,"Prelude":9}],8:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
-var Control_Monad_Eff = require("Control.Monad.Eff");
 var Data_Phaser_Sprite = require("Data.Phaser.Sprite");
-var Data_Phaser_Physics = require("Data.Phaser.Physics");
+var Control_Monad_Eff = require("Control.Monad.Eff");
 var Data_Phaser_Group = require("Data.Phaser.Group");
+var Data_Phaser_Physics = require("Data.Phaser.Physics");
 var Control_Monad_Eff_Phaser = require("Control.Monad.Eff.Phaser");
 var star = "star";
 var sky = "sky";
+var renderSky = Data_Phaser_Sprite.addSprite(sky)({
+    x: 0, 
+    y: 0
+});
 var player = "player";
 var path = function (asset) {
     return "img/" + asset + ".png";
@@ -194,33 +200,37 @@ var preload = function (game) {
         return Data_Phaser_Sprite.loadSprite(game)(player)(path(player))(32)(48)();
     };
 };
+var renderGround = function (game) {
+    return Prelude[">>="](Control_Monad_Eff.bindEff({}))(Prelude[">>="](Control_Monad_Eff.bindEff({}))(Data_Phaser_Group.group(game))(Data_Phaser_Physics.enableBody))(Data_Phaser_Group.create(ground)({
+        x: 0, 
+        y: 10
+    }));
+};
 var create = function (game) {
     return function __do() {
         Data_Phaser_Physics.startSystem(game)(Data_Phaser_Physics.Arcade.value)();
-        var __1 = Data_Phaser_Sprite.addSprite(game)(sky)({
-            x: 0, 
-            y: 0
-        })();
-        var __2 = Prelude[">>="](Control_Monad_Eff.bindEff({}))(Data_Phaser_Group.group(game))(Data_Phaser_Physics.enableBody)();
-        return Prelude.unit;
+        var __1 = renderSky(game)();
+        return renderGround(game)();
     };
 };
 var main = Control_Monad_Eff_Phaser.phaser((function () {
-    var _4 = {};
-    for (var _5 in Control_Monad_Eff_Phaser.config) {
-        if (Control_Monad_Eff_Phaser.config.hasOwnProperty(_5)) {
-            _4[_5] = Control_Monad_Eff_Phaser.config[_5];
+    var _0 = {};
+    for (var _1 in Control_Monad_Eff_Phaser.config) {
+        if (Control_Monad_Eff_Phaser.config.hasOwnProperty(_1)) {
+            _0[_1] = Control_Monad_Eff_Phaser.config[_1];
         };
     };
-    _4.width = 800;
-    _4.height = 600;
-    return _4;
+    _0.width = 800;
+    _0.height = 600;
+    return _0;
 })())({
     preload: preload, 
     create: create
 });
 module.exports = {
     main: main, 
+    renderGround: renderGround, 
+    renderSky: renderSky, 
     create: create, 
     preload: preload, 
     player: player, 
