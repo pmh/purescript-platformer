@@ -1,34 +1,27 @@
-module Phaser.Core ( Game     ()
-                   , Phaser   ()
-                   , Config   ()
-                   , Actions  ()
-                   , Renderer (..)
-                   , config
-                   , actions
-                   , phaser
-                   ) where
+module Control.Monad.Eff.Phaser
+  ( Game     ()
+  , Phaser   ()
+  , Config   ()
+  , Renderer (..)
+  , config
+  , phaser
+  ) where
 
 import Control.Monad.Eff
 import Data.Foreign.EasyFFI
 
-foreign import data Game :: !
-foreign import data Phaser :: *
+foreign import data Phaser :: !
+foreign import data Game   :: *
 
 foreign import innerWidth  "window.innerWidth"  :: Number
 foreign import innerHeight "window.innerHeight" :: Number
 
 type Config  = { id :: String, renderer :: Renderer, width :: Number, height :: Number }
-type Actions = { preload :: forall eff. Phaser -> Eff (game :: Game | eff) Unit
-               , create  :: forall eff. Phaser -> Eff (game :: Game | eff) Unit
-               }
 
 data Renderer = Auto | Canvas | WebGL
 
 config :: Config
 config = { id : "body", renderer : Auto, width : innerWidth, height : innerHeight }
-
-actions :: Actions
-actions = { preload : (\_ -> return unit), create : (\_ -> return unit) }
 
 foreign import phaser
   "function phaser (conf) { \
@@ -42,4 +35,4 @@ foreign import phaser
   \      return game; \
   \    } \
   \  } \
-  \}" :: forall props eff. Config -> {| props} -> Eff (game :: Game | eff) Phaser
+  \}" :: forall props eff. Config -> {| props} -> Eff (game :: Phaser | eff) Game

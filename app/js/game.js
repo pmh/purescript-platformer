@@ -1,7 +1,38 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 require("Main").main();
 
-},{"Main":4}],2:[function(require,module,exports){
+},{"Main":6}],2:[function(require,module,exports){
+"use strict";
+var Prelude = require("Prelude");
+function Auto() {
+
+};
+Auto.value = new Auto();
+function Canvas() {
+
+};
+Canvas.value = new Canvas();
+function WebGL() {
+
+};
+WebGL.value = new WebGL();
+window.innerWidth;
+window.innerHeight;
+function phaser (conf) {   return function (props) {     return function () {       var renderer = (conf.renderer === Auto ? 0 : (conf.renderer === Canvas ? 1 : 2));      var game = new Phaser.Game(conf.width, conf.height, renderer, conf.id, {         preload : function () { if ( props.preload ) props.preload (game)(); },         create  : function () { if ( props.create  ) props.create  (game)(); }       });      return game;     }   } };
+var config = {
+    id: "body", 
+    renderer: Auto.value, 
+    width: innerWidth, 
+    height: innerHeight
+};
+module.exports = {
+    Auto: Auto, 
+    Canvas: Canvas, 
+    WebGL: WebGL, 
+    phaser: phaser, 
+    config: config
+};
+},{"Prelude":7}],3:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
 function returnE(a) {  return function() {    return a;  };};
@@ -50,7 +81,7 @@ module.exports = {
     bindEff: bindEff, 
     monadEff: monadEff
 };
-},{"Prelude":7}],3:[function(require,module,exports){
+},{"Prelude":7}],4:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
 function unsafeForeignProcedure(args) {  return function (stmt) {    return Function(wrap(args.slice()))();    function wrap() {      return !args.length ? stmt : 'return function (' + args.shift() + ') { ' + wrap() + ' };';    }  };};
@@ -63,12 +94,24 @@ module.exports = {
     unsafeForeignProcedure: unsafeForeignProcedure, 
     unsafeForeignFunction: unsafeForeignFunction
 };
-},{"Prelude":7}],4:[function(require,module,exports){
+},{"Prelude":7}],5:[function(require,module,exports){
+"use strict";
+var Prelude = require("Prelude");
+var Data_Foreign_EasyFFI = require("Data.Foreign.EasyFFI");
+var loadSprite = Data_Foreign_EasyFFI.unsafeForeignFunction([ "game", "name", "path", "frameWidth", "frameHeight", "" ])("game.load.spritesheet(name, path, frameWidth, frameHeight)");
+var loadImage = Data_Foreign_EasyFFI.unsafeForeignFunction([ "game", "name", "path", "" ])("game.load.image(name, path)");
+var addSprite = Data_Foreign_EasyFFI.unsafeForeignFunction([ "game", "name", "point", "" ])("game.add.sprite(point.x, point.y, name)");
+module.exports = {
+    addSprite: addSprite, 
+    loadSprite: loadSprite, 
+    loadImage: loadImage
+};
+},{"Data.Foreign.EasyFFI":4,"Prelude":7}],6:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
 var Control_Monad_Eff = require("Control.Monad.Eff");
-var Phaser_Sprite = require("Phaser.Sprite");
-var Phaser_Core = require("Phaser.Core");
+var Data_Phaser_Sprite = require("Data.Phaser.Sprite");
+var Control_Monad_Eff_Phaser = require("Control.Monad.Eff.Phaser");
 var star = "star";
 var sky = "sky";
 var player = "player";
@@ -78,19 +121,19 @@ var path = function (asset) {
 var ground = "platform";
 var preload = function (game) {
     return function __do() {
-        Phaser_Sprite.loadImage(game)(sky)(path(sky))();
-        var __1 = Phaser_Sprite.loadImage(game)(ground)(path(ground))();
-        var __2 = Phaser_Sprite.loadImage(game)(star)(path(star))();
-        return Phaser_Sprite.loadSprite(game)(player)(path(player))(32)(48)();
+        Data_Phaser_Sprite.loadImage(game)(sky)(path(sky))();
+        var __1 = Data_Phaser_Sprite.loadImage(game)(ground)(path(ground))();
+        var __2 = Data_Phaser_Sprite.loadImage(game)(star)(path(star))();
+        return Data_Phaser_Sprite.loadSprite(game)(player)(path(player))(32)(48)();
     };
 };
 var create = function (game) {
-    return Phaser_Sprite.addSprite(game)(star)({
+    return Data_Phaser_Sprite.addSprite(game)(star)({
         x: 0, 
         y: 0
     });
 };
-var main = Phaser_Core.phaser(Phaser_Core.config)({
+var main = Control_Monad_Eff_Phaser.phaser(Control_Monad_Eff_Phaser.config)({
     preload: preload, 
     create: create
 });
@@ -104,60 +147,7 @@ module.exports = {
     sky: sky, 
     path: path
 };
-},{"Control.Monad.Eff":2,"Phaser.Core":5,"Phaser.Sprite":6,"Prelude":7}],5:[function(require,module,exports){
-"use strict";
-var Prelude = require("Prelude");
-var Control_Monad_Eff = require("Control.Monad.Eff");
-function Auto() {
-
-};
-Auto.value = new Auto();
-function Canvas() {
-
-};
-Canvas.value = new Canvas();
-function WebGL() {
-
-};
-WebGL.value = new WebGL();
-window.innerWidth;
-window.innerHeight;
-function phaser (conf) {   return function (props) {     return function () {       var renderer = (conf.renderer === Auto ? 0 : (conf.renderer === Canvas ? 1 : 2));      var game = new Phaser.Game(conf.width, conf.height, renderer, conf.id, {         preload : function () { if ( props.preload ) props.preload (game)(); },         create  : function () { if ( props.create  ) props.create  (game)(); }       });      return game;     }   } };
-var config = {
-    id: "body", 
-    renderer: Auto.value, 
-    width: innerWidth, 
-    height: innerHeight
-};
-var actions = {
-    preload: function (_) {
-        return Prelude["return"](Control_Monad_Eff.monadEff({}))(Prelude.unit);
-    }, 
-    create: function (_) {
-        return Prelude["return"](Control_Monad_Eff.monadEff({}))(Prelude.unit);
-    }
-};
-module.exports = {
-    Auto: Auto, 
-    Canvas: Canvas, 
-    WebGL: WebGL, 
-    phaser: phaser, 
-    actions: actions, 
-    config: config
-};
-},{"Control.Monad.Eff":2,"Prelude":7}],6:[function(require,module,exports){
-"use strict";
-var Prelude = require("Prelude");
-var Data_Foreign_EasyFFI = require("Data.Foreign.EasyFFI");
-var loadSprite = Data_Foreign_EasyFFI.unsafeForeignFunction([ "game", "name", "path", "frameWidth", "frameHeight", "" ])("game.load.spritesheet(name, path, frameWidth, frameHeight)");
-var loadImage = Data_Foreign_EasyFFI.unsafeForeignFunction([ "game", "name", "path", "" ])("game.load.image(name, path)");
-var addSprite = Data_Foreign_EasyFFI.unsafeForeignFunction([ "game", "name", "point", "" ])("game.add.sprite(point.x, point.y, name)");
-module.exports = {
-    addSprite: addSprite, 
-    loadSprite: loadSprite, 
-    loadImage: loadImage
-};
-},{"Data.Foreign.EasyFFI":3,"Prelude":7}],7:[function(require,module,exports){
+},{"Control.Monad.Eff":3,"Control.Monad.Eff.Phaser":2,"Data.Phaser.Sprite":5,"Prelude":7}],7:[function(require,module,exports){
 "use strict";
 var Unit = {
     create: function (value) {
