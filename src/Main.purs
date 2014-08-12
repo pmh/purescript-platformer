@@ -5,6 +5,7 @@ import           Control.Monad.Eff.Phaser
 import           Data.Phaser.Group
 import qualified Data.Phaser.Physics as P
 import           Data.Phaser.Sprite
+import           Data.Phaser.World
 import           Debug.Trace
 
 path :: String -> String
@@ -39,7 +40,7 @@ renderGround :: forall eff. Game -> Eff (phaser :: Phaser | eff) Group
 renderGround game =
   return game >>= group
               >>= P.enableBody
-              >>= create ground { x: 0, y: 10 }
+              >>= create ground { x: 0, y: (worldHeight game) - 64 }
 
 main = phaser config { width = 800, height = 600 }
               { preload : preload', create : create' }

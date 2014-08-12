@@ -1,7 +1,7 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 require("Main").main();
 
-},{"Main":8}],2:[function(require,module,exports){
+},{"Main":9}],2:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
 function Auto() {
@@ -32,7 +32,7 @@ module.exports = {
     phaser: phaser, 
     config: config
 };
-},{"Prelude":9}],3:[function(require,module,exports){
+},{"Prelude":10}],3:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
 function returnE(a) {  return function() {    return a;  };};
@@ -81,7 +81,7 @@ module.exports = {
     bindEff: bindEff, 
     monadEff: monadEff
 };
-},{"Prelude":9}],4:[function(require,module,exports){
+},{"Prelude":10}],4:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
 function unsafeForeignProcedure(args) {  return function (stmt) {    return Function(wrap(args.slice()))();    function wrap() {      return !args.length ? stmt : 'return function (' + args.shift() + ') { ' + wrap() + ' };';    }  };};
@@ -94,7 +94,7 @@ module.exports = {
     unsafeForeignProcedure: unsafeForeignProcedure, 
     unsafeForeignFunction: unsafeForeignFunction
 };
-},{"Prelude":9}],5:[function(require,module,exports){
+},{"Prelude":10}],5:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
 var Data_Foreign_EasyFFI = require("Data.Foreign.EasyFFI");
@@ -104,7 +104,7 @@ module.exports = {
     create: create, 
     group: group
 };
-},{"Data.Foreign.EasyFFI":4,"Prelude":9}],6:[function(require,module,exports){
+},{"Data.Foreign.EasyFFI":4,"Prelude":10}],6:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
 var Data_Foreign_EasyFFI = require("Data.Foreign.EasyFFI");
@@ -161,7 +161,7 @@ module.exports = {
     enableBody: enableBody, 
     startSystem: startSystem
 };
-},{"Data.Foreign.EasyFFI":4,"Prelude":9}],7:[function(require,module,exports){
+},{"Data.Foreign.EasyFFI":4,"Prelude":10}],7:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
 var Data_Foreign_EasyFFI = require("Data.Foreign.EasyFFI");
@@ -173,13 +173,21 @@ module.exports = {
     loadSprite: loadSprite, 
     loadImage: loadImage
 };
-},{"Data.Foreign.EasyFFI":4,"Prelude":9}],8:[function(require,module,exports){
+},{"Data.Foreign.EasyFFI":4,"Prelude":10}],8:[function(require,module,exports){
+"use strict";
+var Prelude = require("Prelude");
+function worldHeight (game) { return game.world.height; };
+module.exports = {
+    worldHeight: worldHeight
+};
+},{"Prelude":10}],9:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
 var Data_Phaser_Sprite = require("Data.Phaser.Sprite");
 var Control_Monad_Eff = require("Control.Monad.Eff");
 var Data_Phaser_Group = require("Data.Phaser.Group");
 var Data_Phaser_Physics = require("Data.Phaser.Physics");
+var Data_Phaser_World = require("Data.Phaser.World");
 var Control_Monad_Eff_Phaser = require("Control.Monad.Eff.Phaser");
 var star = "star";
 var sky = "sky";
@@ -204,7 +212,7 @@ var preload$prime = function (game) {
 var renderGround = function (game) {
     return Prelude[">>="](Control_Monad_Eff.bindEff({}))(Prelude[">>="](Control_Monad_Eff.bindEff({}))(Prelude[">>="](Control_Monad_Eff.bindEff({}))(Prelude["return"](Control_Monad_Eff.monadEff({}))(game))(Data_Phaser_Group.group))(Data_Phaser_Physics.enableBody))(Data_Phaser_Group.create(ground)({
         x: 0, 
-        y: 10
+        y: Data_Phaser_World.worldHeight(game) - 64
     }));
 };
 var create$prime = function (game) {
@@ -241,7 +249,7 @@ module.exports = {
     sky: sky, 
     path: path
 };
-},{"Control.Monad.Eff":3,"Control.Monad.Eff.Phaser":2,"Data.Phaser.Group":5,"Data.Phaser.Physics":6,"Data.Phaser.Sprite":7,"Prelude":9}],9:[function(require,module,exports){
+},{"Control.Monad.Eff":3,"Control.Monad.Eff.Phaser":2,"Data.Phaser.Group":5,"Data.Phaser.Physics":6,"Data.Phaser.Sprite":7,"Data.Phaser.World":8,"Prelude":10}],10:[function(require,module,exports){
 "use strict";
 var Unit = {
     create: function (value) {
